@@ -29,6 +29,9 @@ BIOS: **BIOS**
 
 If you don't want to bother configuring the VM yourself I'm providing helper scripts to setup/start the VM.
 
+However HOST grub and initramfs config should be done manually !
+Refer to this [section](https://github.com/Azkali/GVT-GPD-Win2#linux-host-config)
+
 Use setup.sh once only to setup your host configuration.
 Use start.sh each time you want to boot the VM
 

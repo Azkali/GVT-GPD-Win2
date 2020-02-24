@@ -1,0 +1,181 @@
+<domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+  <name>DISK_NAME</name>
+  <!-- <uuid>a2500bce-fd98-4d30-b23c-62e96da5d0b6</uuid>
+  <metadata>
+    <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
+      <libosinfo:os id="http://microsoft.com/win/10"/>
+    </libosinfo:libosinfo>
+  </metadata> -->
+  <memory unit='KiB'>RAM_KiB</memory>
+  <currentMemory unit='KiB'>RAM_KiB</currentMemory>
+  <memoryBacking>
+    <hugepages/>
+    <nosharepages/>
+    <discard/>
+  </memoryBacking>
+  <vcpu placement='static'>4</vcpu>
+  <numatune>
+    <memory mode='preferred' nodeset='0'/>
+  </numatune>
+  <os>
+    <type arch='x86_64' machine='pc-q35-5.0'>hvm</type>
+    <boot dev='hd'/>
+    <bootmenu enable='yes'/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <hyperv>
+      <relaxed state='on'/>
+      <vapic state='off'/>
+      <spinlocks state='on' retries='8191'/>
+    </hyperv>
+    <vmport state='off'/>
+    <ioapic driver='kvm'/>
+  </features>
+  <cpu mode='host-model' check='partial'/>
+  <clock offset='localtime'>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='hpet' present='no'/>
+    <timer name='hypervclock' present='yes'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <pm>
+    <suspend-to-mem enabled='yes'/>
+    <suspend-to-disk enabled='yes'/>
+  </pm>
+  <devices>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2' cache='none' io='native'/>
+      <source file='/var/lib/libvirt/filesystems/DISKNAME.qcow2'/>
+      <target dev='sda' bus='sata'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='0'/>
+    </disk>
+    <disk type="file" device="cdrom">
+      <driver name="qemu" type="raw"/>
+      <source file="ISO_FILE"/>
+      <target dev="sdb" bus="sata"/>
+      <readonly/>
+    </disk>
+    <controller type='usb' index='0' model='qemu-xhci' ports='15'>
+      <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
+    </controller>
+    <controller type='sata' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1f' function='0x2'/>
+    </controller>
+    <controller type='pci' index='0' model='pcie-root'/>
+    <controller type='pci' index='1' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='1' port='0x10'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0' multifunction='on'/>
+    </controller>
+    <controller type='pci' index='2' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='2' port='0x11'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x1'/>
+    </controller>
+    <controller type='pci' index='3' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='3' port='0x12'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x2'/>
+    </controller>
+    <controller type='pci' index='4' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='4' port='0x13'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x3'/>
+    </controller>
+    <controller type='pci' index='5' model='pcie-to-pci-bridge'>
+      <model name='pcie-pci-bridge'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+    </controller>
+    <controller type='pci' index='6' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='6' port='0x14'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x4'/>
+    </controller>
+    <controller type='pci' index='7' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='7' port='0x15'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x5'/>
+    </controller>
+    <controller type='pci' index='8' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='8' port='0x8'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x0' multifunction='on'/>
+    </controller>
+    <controller type='pci' index='9' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='9' port='0x9'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
+    </controller>
+    <controller type='scsi' index='0' model='lsilogic'>
+      <address type='pci' domain='0x0000' bus='0x05' slot='0x01' function='0x0'/>
+    </controller>
+    <interface type='network'>
+      <mac address='52:54:00:25:52:06'/>
+      <source network='default'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
+    </interface>
+    <channel type='spicevmc'>
+      <target type='virtio' name='com.redhat.spice.0'/>
+      <address type='virtio-serial' controller='0' bus='0' port='1'/>
+    </channel>
+    <channel type='unix'>
+      <target type='virtio' name='org.qemu.guest_agent.0'/>
+      <address type='virtio-serial' controller='0' bus='0' port='2'/>
+    </channel>
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+    <sound model='ich9'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1b' function='0x0'/>
+    </sound>
+    <video>
+      <model type='none'/>
+    </video>
+    <hostdev mode='subsystem' type='mdev' managed='no' model='vfio-pci' display='off'>
+      <source>
+        <address uuid='GPU_UUID'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x07' slot='0x00' function='0x0'/>
+    </hostdev>
+    <redirdev bus='usb' type='spicevmc'>
+      <address type='usb' bus='0' port='2'/>
+    </redirdev>
+    <redirdev bus='usb' type='spicevmc'>
+      <address type='usb' bus='0' port='3'/>
+    </redirdev>
+    <memballoon model='virtio'>
+      <address type='pci' domain='0x0000' bus='0x06' slot='0x00' function='0x0'/>
+    </memballoon>
+    <iommu model='intel'>
+      <driver caching_mode='on' iotlb='on'/>
+    </iommu>
+  </devices>
+  <qemu:commandline>
+    <qemu:arg value='-set'/>
+    <qemu:arg value='device.hostdev0.romfile=/var/lib/libvirt/images/vbios_gvt_uefi.rom'/>
+    <qemu:arg value='-set'/>
+    <qemu:arg value='device.hostdev0.x-igd-opregion=on'/>
+    <qemu:arg value='-set'/>
+    <qemu:arg value='device.hostdev0.ramfb=on'/>
+    <qemu:arg value='-set'/>
+    <qemu:arg value='device.hostdev0.driver=vfio-pci-nohotplug'/>
+    <qemu:arg value='-set'/>
+    <qemu:arg value='device.hostdev0.display=on'/>
+    <qemu:arg value='-display'/>
+    <qemu:arg value='gtk,gl=on'/>
+    <qemu:env name='DISPLAY' value=':1'/>
+    <qemu:env name='GDK_SCALE' value='1.0'/>
+    <qemu:env name='QEMU_AUDIO_DRV' value='pa'/>
+    <qemu:env name='QEMU_PA_SERVER' value='/run/user/1000/pulse/native'/>
+  </qemu:commandline>
+</domain>
+

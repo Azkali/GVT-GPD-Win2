@@ -40,13 +40,13 @@ Examples :
 `setup.sh` :
 
 ```
-# ./helpers/setup.sh windows.iso 50G
+sudo ./helpers/setup.sh windows.iso 50G
 ```
 
 `start.sh` :
 
 ```
-# ./helpers/start.sh windows
+sudo ./helpers/start.sh windows
 ```
 
 ## Pre requisites
@@ -88,7 +88,7 @@ cd capstone
 ```
 
 ```
-# ./make.sh
+sudo ./make.sh
 ```
 
 ### Patched QEMU
@@ -144,11 +144,11 @@ cd ../..
 ```
 
 ```
-# make install
+sudo make install
 ```
 
 ```
-# cp roms/seabios/out/bios.bin /usr/bin/bios.bin
+sudo cp roms/seabios/out/bios.bin /usr/bin/bios.bin
 ```
 
 ## Linux host config
@@ -172,7 +172,7 @@ GRUB_CMDLINE_DEFAULT="... i915.enable_gvt=1 kvm.ignore_msrs=1 intel_iommu=igfx_o
 And update GRUB :
 
 ```
-# update-grub
+sudo update-grub
 ```
 
 ### QEMU as user
@@ -207,11 +207,6 @@ Append the following inside `<domain>` replace RAM_KiB by the amount of RAM to a
   ................
   <memory unit='KiB'>RAM_KiB</memory>
   <currentMemory unit='KiB'>RAM_KiB</currentMemory>
-  <memoryBacking>
-    <hugepages/>
-    <nosharepages/>
-    <discard/>
-  </memoryBacking>
   ................
 
 ```

@@ -39,13 +39,13 @@ Examples :
 
 `setup.sh` :
 
-```sh
+```
 # ./helpers/setup.sh windows.iso 50G
 ```
 
 `start.sh` :
 
-```sh
+```
 # ./helpers/start.sh windows
 ```
 
@@ -87,7 +87,7 @@ git clone https://github.com/aquynh/capstone/
 cd capstone
 ```
 
-```sh
+```
 # ./make.sh
 ```
 
@@ -143,11 +143,11 @@ make -j$((`nproc`/2)) ### or `make -j${nproc}` to use all core
 cd ../..
 ```
 
-```sh
+```
 # make install
 ```
 
-```sh
+```
 # cp roms/seabios/out/bios.bin /usr/bin/bios.bin
 ```
 
@@ -171,7 +171,7 @@ GRUB_CMDLINE_DEFAULT="... i915.enable_gvt=1 kvm.ignore_msrs=1 intel_iommu=igfx_o
 
 And update GRUB :
 
-```sh
+```
 # update-grub
 ```
 

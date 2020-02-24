@@ -10,15 +10,14 @@ HOST_CORES_MASK=C3              # 0-1,6-7, bitmask 0b000011000011
 VIRT_CORES='2-5,8-11'           # Cores reserved for virtual machine(s)
 
 ### Uncomment/Comment the following 3 lines to use this script default hugepages allocation variables
-
 # HUGEPAGES_SIZE=$(grep Hugepagesize /proc/meminfo | awk {'print $2'})
 # HUGEPAGES_SIZE=$((HUGEPAGES_SIZE * 1024))
 # HUGEPAGES_ALLOCATED=$(sysctl vm.nr_hugepages | awk {'print $3'})
 
 ### Comment/Uncomment the following 3 lines to use my own hugepages allocation variables
-
 RATI0=3
-[[ $2 ]] && [[ "$2" =~ [1-4] ]] ? RATIO=$2 : echo "Setting 3/4 of Total amount of RAM for the VM"
+[[ $3 ]] && [[ "$3" =~ [1-4] ]] && RATIO=$3 
+echo "Setting ${RATIO}/4 of Total amount of RAM for the VM"
 HUGEPAGES_SIZE=$(( $( cat /proc/meminfo | grep MemTotal: | awk {'print $2'}) / 4 * $RATIO ))
 HUGEPAGES_SIZE="${ram-in-kib%*???}"
 
@@ -56,13 +55,19 @@ then
     echo 3 > /proc/sys/vm/drop_caches
     echo 1 > /proc/sys/vm/compact_memory
 
-    # VM_HUGEPAGES_TOTAL=$(($HUGEPAGES_ALLOCATED + $VM_HUGEPAGES_NEED)) ## Uncomment/Comment this line to use script default behavior
-    VM_HUGEPAGES_TOTAL=$HUGEPAGES_SIZE ## Comment/Uncomment to allocate statically memory here 6GB
+    ## Uncomment/Comment this line to use script default behavior
+    # VM_HUGEPAGES_TOTAL=$(($HUGEPAGES_ALLOCATED + $VM_HUGEPAGES_NEED)) 
+    
+    ## Uncomment/Comment this line to use my RAM setup
+    VM_HUGEPAGES_TOTAL=$HUGEPAGES_SIZE
+    
     sysctl vm.nr_hugepages=$VM_HUGEPAGES_TOTAL
 
     if [[ $HUGEPAGES_ALLOCATED == '0' ]];
     then
-        # shield_vm ## Comment this line for Win2 or P2Max
+        ## Comment this line for Win2 or P2Max
+        shield_vm 
+    
         # Reduce VM jitter: https://www.kernel.org/doc/Documentation/kernel-per-CPU-kthreads.txt
         sysctl vm.stat_interval=120
 
@@ -70,7 +75,10 @@ then
         # the kernel's dirty page writeback mechanism uses kthread workers. They introduce
         # massive arbitrary latencies when doing disk writes on the host and aren't
         # migrated by cset. Restrict the workqueue to use only cpu 0.
-        # echo $HOST_CORES_MASK > /sys/bus/workqueue/devices/writeback/cpumask ## Comment this line for Win2 or P2Max
+    
+        ## Comment this line for Win2 or P2Max
+        echo $HOST_CORES_MASK > /sys/bus/workqueue/devices/writeback/cpumask 
+    
         # THP can allegedly result in jitter. Better keep it off.
         echo never > /sys/kernel/mm/transparent_hugepage/enabled
         # Force P-states to P0
@@ -82,8 +90,11 @@ fi
 
 if [[ $VM_ACTION == 'release' ]];
 then
-    # VM_HUGEPAGES_TOTAL=$(($HUGEPAGES_ALLOCATED - $VM_HUGEPAGES_NEED)) ## Comment this line to allocate memory statically
-    # VM_HUGEPAGES_TOTAL=$(($VM_HUGEPAGES_TOTAL<0?0:$VM_HUGEPAGES_TOTAL)) ## Comment this line to allocate memory statically
+    ## Uncomment/Comment this 2 lines to use default script behavior
+    # VM_HUGEPAGES_TOTAL=$(($HUGEPAGES_ALLOCATED - $VM_HUGEPAGES_NEED)) 
+    # VM_HUGEPAGES_TOTAL=$(($VM_HUGEPAGES_TOTAL<0?0:$VM_HUGEPAGES_TOTAL)) 
+
+    ## Uncomment/Comment this line to use my RAM setup
     VM_HUGEPAGES_TOTAL=0
     sysctl vm.nr_hugepages=$VM_HUGEPAGES_TOTAL
 
@@ -92,7 +103,10 @@ then
         # All VMs offline
         sysctl vm.stat_interval=1
         sysctl -w kernel.watchdog=1
-        # unshield_vm ## Comment this line for Win2 or P2Max
+        
+        ## Comment this line for Win2 or P2Max
+        unshield_vm 
+        
         echo always > /sys/kernel/mm/transparent_hugepage/enabled
         echo powersave | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
         echo 1 > /sys/bus/workqueue/devices/writeback/numa

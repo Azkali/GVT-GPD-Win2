@@ -9,6 +9,6 @@
 xhost si:localuser:nobody
 /etc/libvirt/hooks/qemu $1 release -
 sleep 5
-/etc/libvirt/hooks/qemu $1 prepare -
+/etc/libvirt/hooks/qemu $1 prepare $2 -
 sleep 5
 virsh start $1

@@ -36,7 +36,10 @@ Use setup.sh once only to setup your host configuration.
 Use start.sh each time you want to boot the VM
 
 Setup script usage `./helpers/setup.sh iso_image vm_size in GB`.
-Start script usage `./helpers/start.sh vm_name`.
+Start script usage `./helpers/start.sh vm_name ram_ratio_allocation_size`.
+*ram_ratio_allocation_size* is optional and should be in range [1-4].
+
+It allocates X/4 * Total_RAM amount ( default is 3/4 )
 
 Examples :
 
@@ -49,7 +52,7 @@ sudo ./helpers/setup.sh windows.iso 50G
 `start.sh` :
 
 ```
-sudo ./helpers/start.sh windows
+sudo ./helpers/start.sh windows 3
 ```
 
 ## Pre requisites

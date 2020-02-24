@@ -27,12 +27,26 @@ BIOS: **BIOS**
 
 ## AutoInstaller
 
-If you don't want to bother configuring the VM yourself I'm providing helper scripts to setup/start/stop the VM
+If you don't want to bother configuring the VM yourself I'm providing helper scripts to setup/start the VM.
 
-Usage:
+Use setup.sh once only to setup your host configuration.
+Use start.sh each time you want to boot the VM
+
+Setup script usage `./helpers/setup.sh iso_image vm_size in GB`.
+Start script usage `./helpers/start.sh vm_name`.
+
+Examples :
+
+`setup.sh` :
 
 ```sh
-setup.sh *iso_image* **
+# ./helpers/setup.sh windows.iso 50G
+```
+
+`start.sh` :
+
+```sh
+# ./helpers/start.sh windows
 ```
 
 ## Pre requisites
@@ -50,7 +64,7 @@ setup.sh *iso_image* **
 Check if your CPU supports VT-x/VT-d :
 
 ```sh
-LC_ALL=C lscpu | grep Virtualization\n
+LC_ALL=C lscpu | grep Virtualization
 ```
 
 Check if KVM is loaded in the kernel :

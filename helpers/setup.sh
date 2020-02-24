@@ -4,8 +4,7 @@
 source ./helpers/env.sh
 
 [[ ! $1 ]] && echo 'Please provide a LiveCD iso/image of your OS.' && exit 1
-[[ -d $2 ]] && libvirt-dir=$2
-[[ ! $3 ]] || [[ ! "${3%?}" =~ ^[0-9]+$ ]]; echo "Please provide a size for the VM disk filesystem ( minimum for Windows 10 1909: 30G )" && exit 1
+[[ ! $2 ]] || [[ ! "${2%?}" =~ ^[0-9]+$ ]]; echo "Please provide a size for the VM disk filesystem ( minimum for Windows 10 1909: 30G )" && exit 1
 
 iso-basename="basename ${1%.*}"
 mv ./gvt-g.xml ./${iso-basename}-gvt-g.xml
@@ -100,11 +99,6 @@ make install
 cp roms/seabios/out/bios.bin /usr/bin/bios.bin
 cd ..
 echo "Done!"
-
-# echo "Checking if device is a GPD WIN2 or P2MAX to apply custom tweaks"
-# device="$(dmidecode | grep -A3 '^System Information' | grep 'Product Name: ' | sed -e 's/Product Name://' | tr -d '[:blank:]')"
-# [[ "${device}" == "P2MAX" || "${device}" == "WIN2" ]] && configs/gpd.sh "${device,,}"
-# echo "Done!"
 
 echo "Creating "${vm-disk-size}"G qcow2 image"
 qemu-img create -f qcow2 "${libvirt-dir}/filesystems"/"${iso-basename}".qcow2 "${vm-disk-size}"

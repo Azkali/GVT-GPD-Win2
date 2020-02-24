@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 [[ "$(whoami)" != "root" ]] && echo "Please use sudo or run as root" && exit
 
+### Checking if device is a GPD WIN2 or P2MA
+device="$(dmidecode | grep -A3 '^System Information' | grep 'Product Name: ' | sed -e 's/Product Name://' | tr -d '[:blank:]')"
+[[ "${device}" == "P2MAX" || "${device}" == "WIN2" ]]
+
+
 [[ ! -f "/usr/share/X11/xorg.conf.d/20-intel.conf" ]] && 
 echo "Setting up tear-free screen config" &&
 echo 'Section "Device"
@@ -10,7 +15,7 @@ Option "AccelMethod" "sna"
 Option "TearFree" "true"
 EndSection' > /usr/share/X11/xorg.conf.d/20-intel.conf
 
-[[ "$1" == "win2" ]] && 
+[[ "${device,,}" == "win2" ]] && 
 echo "Fixing gamepad toggle" &&
 echo "[Unit]
 Description=Fix GPD Win2 gamepad toggle
